@@ -1,377 +1,177 @@
+<script>
+/* =========================
+   JARA AI — FREE TOOL PANEL
+   ========================= */
+
+const JARA_TOOLS = [
+  {
+    name: "AI Chat",
+    prompt: "You are JaraAi, a helpful AI assistant. Answer clearly and directly."
+  },
+  {
+    name: "Image Prompt",
+    prompt: "Create a detailed cinematic AI image-generation prompt. Include subject, environment, lighting, camera, composition and 16:9."
+  },
+  {
+    name: "Video Prompt",
+    prompt: "Create a detailed cinematic AI video prompt with camera movement, subject movement, environment, lighting and duration."
+  },
+  {
+    name: "Research",
+    prompt: "Act as a research assistant. Organize the topic into facts, dates, locations, people, evidence, investigation and unanswered questions. Never invent missing facts."
+  },
+  {
+    name: "Documentary",
+    prompt: "Create a serious, natural, cinematic documentary structure with a strong hook, chronological storytelling and audience retention."
+  }
+];
+
+/* ---------- 4 HOUR FREE SESSION ---------- */
+
+const JARA_SESSION_TIME = 4 * 60 * 60 * 1000;
+const JARA_START_KEY = "jaraAiSessionStart";
+
+function jaraStartSession() {
+  let start = localStorage.getItem(JARA_START_KEY);
+
+  if (!start) {
+    start = Date.now().toString();
+    localStorage.setItem(JARA_START_KEY, start);
+  }
+
+  return Number(start);
+}
+
+function jaraRemainingTime() {
+  const start = jaraStartSession();
+  return Math.max(0, JARA_SESSION_TIME - (Date.now() - start));
+}
+
+function jaraFormatTime(ms) {
+  const total = Math.floor(ms / 1000);
+  const h = Math.floor(total / 3600);
+  const m = Math.floor((total % 3600) / 60);
+  const s = total % 60;
+
+  return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+}
+
+function jaraTimer() {
+  const remaining = jaraRemainingTime();
+
+  const timer = document.getElementById("jaraTimer");
+
+  if (timer) {
+    timer.textContent = "Free: " + jaraFormatTime(remaining);
+  }
+
+  if (remaining <= 0) {
+    const send = document.querySelector(".send");
+    if (send) send.disabled = true;
+
+    if (timer) timer.textContent = "Free session ended";
+  }
+}
+
+setInterval(jaraTimer, 1000);
+jaraTimer();
 
 
-Index · HTML
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JARA AI</title>
- 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
- 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: Arial, sans-serif;
-      color: white;
-      background:
-        radial-gradient(circle at top left, #25145c, transparent 35%),
-        radial-gradient(circle at top right, #003c52, transparent 35%),
-        #070a12;
-    }
- 
-    .app {
-      width: min(900px, 94%);
-      margin: auto;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      padding: 20px 0;
-    }
- 
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 0 20px;
-    }
- 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
- 
-    .logo {
-      width: 45px;
-      height: 45px;
-      border-radius: 14px;
-      display: grid;
-      place-items: center;
-      font-size: 22px;
-      font-weight: bold;
-      background: linear-gradient(135deg, #7c5cff, #00d9ff);
-    }
- 
-    h1 {
-      margin: 0;
-      font-size: 21px;
-    }
- 
-    .status {
-      color: #8effbd;
-      font-size: 13px;
-    }
- 
-    .hero {
-      text-align: center;
-      padding: 45px 10px 30px;
-    }
- 
-    .orb {
-      width: 110px;
-      height: 110px;
-      margin: auto auto 20px;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      font-size: 42px;
-      font-weight: bold;
-      background: linear-gradient(135deg, #7c5cff, #00d9ff);
-      box-shadow: 0 0 50px rgba(124,92,255,.35);
-    }
- 
-    .hero h2 {
-      margin: 0;
-      font-size: clamp(38px, 8vw, 68px);
-    }
- 
-    .gradient {
-      background: linear-gradient(90deg, #fff, #a797ff, #50e8ff);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
- 
-    .hero p {
-      max-width: 620px;
-      margin: 16px auto;
-      color: #9aa5bc;
-      line-height: 1.6;
-    }
- 
-    .chat {
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,.1);
-      border-radius: 22px;
-      background: rgba(15,20,35,.88);
-    }
- 
-    .chat-top {
-      padding: 14px 18px;
-      border-bottom: 1px solid rgba(255,255,255,.1);
-      display: flex;
-      justify-content: space-between;
-      color: #9aa5bc;
-      font-size: 13px;
-    }
- 
-    #messages {
-      min-height: 320px;
-      max-height: 55vh;
-      overflow-y: auto;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 13px;
-    }
- 
-    .message {
-      max-width: 82%;
-      padding: 13px 15px;
-      border-radius: 17px;
-      line-height: 1.6;
-      white-space: pre-wrap;
-    }
- 
-    .ai {
-      align-self: flex-start;
-      background: #182039;
-    }
- 
-    .user {
-      align-self: flex-end;
-      background: #29365a;
-    }
- 
-    .composer {
-      display: flex;
-      gap: 10px;
-      padding: 12px;
-      border-top: 1px solid rgba(255,255,255,.1);
-    }
- 
-    textarea {
-      flex: 1;
-      min-height: 52px;
-      max-height: 140px;
-      resize: none;
-      padding: 15px;
-      border-radius: 15px;
-      border: 1px solid rgba(255,255,255,.1);
-      outline: none;
-      background: rgba(255,255,255,.05);
-      color: white;
-      font-family: inherit;
-      font-size: 14px;
-    }
- 
-    textarea:focus {
-      border-color: #7c5cff;
-    }
- 
-    button {
-      border: 0;
-      cursor: pointer;
-      color: white;
-    }
- 
-    button:disabled {
-      opacity: .5;
-      cursor: not-allowed;
-    }
- 
-    .send {
-      height: 52px;
-      padding: 0 19px;
-      border-radius: 15px;
-      font-weight: bold;
-      background: linear-gradient(135deg, #7c5cff, #5e8dff);
-    }
- 
-    .quick {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 8px;
-      padding: 16px 0;
-    }
- 
-    .quick button {
-      padding: 9px 13px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.1);
-      background: rgba(255,255,255,.04);
-    }
- 
-    footer {
-      margin-top: auto;
-      text-align: center;
-      padding-top: 20px;
-      color: #69748a;
-      font-size: 12px;
-    }
- 
-    @media (max-width: 600px) {
-      .message {
-        max-width: 90%;
+/* ---------- TOOL BUTTONS ---------- */
+
+function jaraCreateTools() {
+
+  if (document.getElementById("jaraTools")) return;
+
+  const box = document.createElement("div");
+  box.id = "jaraTools";
+
+  box.style.cssText = `
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    justify-content:center;
+    margin:12px 0 4px;
+  `;
+
+  JARA_TOOLS.forEach(tool => {
+
+    const button = document.createElement("button");
+
+    button.textContent = tool.name;
+
+    button.style.cssText = `
+      padding:9px 14px;
+      border-radius:999px;
+      background:rgba(124,92,255,.12);
+      border:1px solid rgba(124,92,255,.35);
+      color:white;
+      cursor:pointer;
+      font-size:13px;
+    `;
+
+    button.onclick = () => {
+
+      const textarea = document.querySelector("textarea");
+
+      if (!textarea) return;
+
+      if (tool.name === "AI Chat") {
+        textarea.value = "";
+        textarea.placeholder = "Ask JaraAi anything...";
+      } else {
+        textarea.value =
+          `[${tool.name}]\n\n` +
+          `Topic: \n\n` +
+          `Create the result using these instructions:\n` +
+          tool.prompt;
       }
-    }
-  </style>
-</head>
- 
-<body>
- 
-  <div class="app">
- 
-    <header>
-      <div class="brand">
-        <div class="logo">J</div>
-        <div>
-          <h1>JARA AI</h1>
-          <div style="color:#9aa5bc;font-size:12px;">
-            Personal AI Assistant
-          </div>
-        </div>
-      </div>
- 
-      <div class="status">● Live AI</div>
-    </header>
- 
-    <section class="hero">
-      <div class="orb">J</div>
- 
-      <h2>
-        Meet <span class="gradient">JARA AI</span>
-      </h2>
- 
-      <p>
-        Your futuristic AI assistant. Ask anything — questions, research,
-        stories, ideas — and JARA AI will answer.
-      </p>
-    </section>
- 
-    <section class="chat">
- 
-      <div class="chat-top">
-        <span>JARA AI • Live AI</span>
-        <span id="clock"></span>
-      </div>
- 
-      <div id="messages">
-        <div class="message ai">Hello! 👋 I'm JARA AI. How can I help you today?</div>
-      </div>
- 
-      <div class="composer">
-        <textarea id="input" placeholder="Message JARA AI..." rows="1"></textarea>
-        <button class="send" id="sendBtn">Send</button>
-      </div>
- 
-    </section>
- 
-    <div class="quick">
-      <button data-prompt="Give me 10 documentary topics in table format.">💡 Documentary Ideas</button>
-      <button data-prompt="Give me 5 creative website ideas.">🚀 Website Ideas</button>
-      <button data-prompt="Explain artificial intelligence in simple words.">🤖 Explain AI</button>
-      <button data-prompt="Write a professional bio for a developer.">📝 Write a Bio</button>
-    </div>
- 
-    <footer>© <span id="year"></span> JARA AI</footer>
- 
-  </div>
- 
-  <script>
-    // ⚠️ Apna Worker URL yahan daalein (agar naya banaya hai to badal lein)
-    const WORKER_URL = "https://jara-ai-backend.jairasgamango100.workers.dev/";
- 
-    const input = document.getElementById("input");
-    const sendBtn = document.getElementById("sendBtn");
-    const messages = document.getElementById("messages");
- 
-    function addMessage(text, type) {
-      const message = document.createElement("div");
-      message.className = "message " + type;
-      message.textContent = text;
-      messages.appendChild(message);
-      messages.scrollTop = messages.scrollHeight;
-      return message;
-    }
- 
-    function showTyping() {
-      return addMessage("JARA AI is thinking...", "ai");
-    }
- 
-    let busy = false;
- 
-    async function sendMessage(customText) {
-      if (busy) return;
- 
-      const text = (customText || input.value).trim();
-      if (!text) return;
- 
-      addMessage(text, "user");
-      input.value = "";
- 
-      busy = true;
-      sendBtn.disabled = true;
- 
-      const typing = showTyping();
- 
-      try {
-        const response = await fetch(WORKER_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: text })
-        });
- 
-        const data = await response.json();
-        typing.remove();
- 
-        if (!response.ok) {
-          console.error(data);
-          addMessage("AI server error 😕 " + (data.error?.error?.message || data.error || "Please check the Worker."), "ai");
-          return;
-        }
- 
-        addMessage(data.reply || "No response received from AI.", "ai");
- 
-      } catch (error) {
-        typing.remove();
-        console.error(error);
-        addMessage("JARA AI server se connect nahi ho pa raha 😕", "ai");
-      } finally {
-        busy = false;
-        sendBtn.disabled = false;
-      }
-    }
- 
-    sendBtn.addEventListener("click", () => sendMessage());
- 
-    input.addEventListener("keydown", (event) => {
-      if (event.key === "Enter" && !event.shiftKey) {
-        event.preventDefault();
-        sendMessage();
-      }
-    });
- 
-    document.querySelectorAll(".quick button").forEach((button) => {
-      button.addEventListener("click", () => sendMessage(button.dataset.prompt));
-    });
- 
-    function updateClock() {
-      document.getElementById("clock").textContent =
-        new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-    }
- 
-    document.getElementById("year").textContent = new Date().getFullYear();
-    updateClock();
-    setInterval(updateClock, 1000);
-  </script>
- 
-</body>
-</html>
- 
+
+      textarea.focus();
+    };
+
+    box.appendChild(button);
+  });
+
+  const chat = document.querySelector(".chat");
+
+  if (chat) {
+    chat.parentNode.insertBefore(box, chat);
+  }
+}
+
+
+/* ---------- TIMER DISPLAY ---------- */
+
+function jaraCreateTimer() {
+
+  if (document.getElementById("jaraTimer")) return;
+
+  const header = document.querySelector("header");
+
+  if (!header) return;
+
+  const timer = document.createElement("div");
+
+  timer.id = "jaraTimer";
+
+  timer.style.cssText = `
+    font-size:12px;
+    color:#8effbd;
+    margin-top:4px;
+  `;
+
+  header.appendChild(timer);
+
+  jaraTimer();
+}
+
+
+/* ---------- START ---------- */
+
+document.addEventListener("DOMContentLoaded", () => {
+  jaraCreateTools();
+  jaraCreateTimer();
+});
+
+</script>
