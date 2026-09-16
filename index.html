@@ -1,177 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>JARA AI</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:#080b16;
+  color:white;
+  min-height:100vh;
+}
+
+.app{
+  max-width:1000px;
+  margin:auto;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:18px;
+  border-bottom:1px solid #252b40;
+}
+
+.logo{
+  font-size:25px;
+  font-weight:bold;
+}
+
+.logo span{
+  color:#9b7cff;
+}
+
+.status{
+  font-size:12px;
+  color:#71e6a2;
+}
+
+.hero{
+  text-align:center;
+  padding:45px 20px 20px;
+}
+
+.hero h1{
+  font-size:42px;
+  margin-bottom:12px;
+}
+
+.hero h1 span{
+  color:#9b7cff;
+}
+
+.hero p{
+  color:#aab1c5;
+  line-height:1.6;
+}
+
+.modes{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:8px;
+  padding:20px;
+}
+
+.mode{
+  background:#141a2b;
+  color:#dce1ef;
+  border:1px solid #303850;
+  border-radius:12px;
+  padding:10px 14px;
+  cursor:pointer;
+}
+
+.mode:hover,
+.mode.active{
+  background:#33265e;
+  border-color:#9178ff;
+}
+
+#chat{
+  flex:1;
+  padding:15px;
+  overflow-y:auto;
+}
+
+.message{
+  max-width:85%;
+  padding:14px 16px;
+  margin:12px 0;
+  border-radius:16px;
+  line-height:1.6;
+  white-space:pre-wrap;
+}
+
+.user{
+  margin-left:auto;
+  background:#6752d9;
+}
+
+.ai{
+  margin-right:auto;
+  background:#151b2d;
+  border:1px solid #29334b;
+}
+
+.input-area{
+  padding:15px;
+  border-top:1px solid #252b40;
+}
+
+.input-box{
+  display:flex;
+  gap:10px;
+  background:#151b2d;
+  border:1px solid #303951;
+  border-radius:18px;
+  padding:10px;
+}
+
+textarea{
+  flex:1;
+  resize:none;
+  outline:none;
+  border:none;
+  background:transparent;
+  color:white;
+  font-size:16px;
+  padding:12px;
+  min-height:48px;
+}
+
+textarea::placeholder{
+  color:#7d879f;
+}
+
+#send{
+  align-self:flex-end;
+  background:#7b61ff;
+  color:white;
+  border:none;
+  border-radius:13px;
+  padding:13px 18px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+#send:hover{
+  background:#917cff;
+}
+
+.quick{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  padding-top:10px;
+}
+
+.quick button{
+  white-space:nowrap;
+  background:#11172a;
+  color:#bdc5d8;
+  border:1px solid #29334b;
+  border-radius:10px;
+  padding:8px 12px;
+  cursor:pointer;
+}
+
+.footer{
+  text-align:center;
+  color:#626d85;
+  font-size:11px;
+  padding:10px;
+}
+
+@media(max-width:600px){
+  .hero h1{
+    font-size:32px;
+  }
+
+  .message{
+    max-width:94%;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header>
+  <div class="logo">JARA <span>AI</span></div>
+  <div class="status">● READY</div>
+</header>
+
+<section class="hero">
+  <h1>Hello, I'm <span>JARA AI</span></h1>
+  <p>
+    Ask questions, learn, research, write, analyze,
+    solve problems and explore ideas.
+  </p>
+</section>
+
+<div class="modes">
+
+<button class="mode active" data-mode="General">
+🤖 General
+</button>
+
+<button class="mode" data-mode="Research">
+🔎 Research
+</button>
+
+<button class="mode" data-mode="Education">
+📚 Education
+</button>
+
+<button class="mode" data-mode="Coding">
+💻 Coding
+</button>
+
+<button class="mode" data-mode="Writing">
+✍️ Writing
+</button>
+
+<button class="mode" data-mode="Analysis">
+🧠 Analysis
+</button>
+
+</div>
+
+<main id="chat">
+
+<div class="message ai">
+Hi! I'm JARA AI. 💜
+
+You can ask me about:
+• Education
+• Research
+• Science
+• Technology
+• Coding
+• Writing
+• General questions
+• Ideas and explanations
+
+What would you like to know?
+</div>
+
+</main>
+
+<div class="input-area">
+
+<div class="input-box">
+
+<textarea
+id="prompt"
+placeholder="Ask JARA AI anything..."
+rows="1">
+</textarea>
+
+<button id="send">Send</button>
+
+</div>
+
+<div class="quick">
+
+<button onclick="usePrompt('Explain Artificial Intelligence in simple language.')">
+🤖 Explain AI
+</button>
+
+<button onclick="usePrompt('Teach me this topic step by step: ')">
+📚 Teach me
+</button>
+
+<button onclick="usePrompt('Research this topic and explain the important facts: ')">
+🔎 Research
+</button>
+
+<button onclick="usePrompt('Help me write this professionally: ')">
+✍️ Writing
+</button>
+
+</div>
+
+<div class="footer">
+JARA AI • Demo Mode
+</div>
+
+</div>
+
+</div>
+
 <script>
-/* =========================
-   JARA AI — FREE TOOL PANEL
-   ========================= */
 
-const JARA_TOOLS = [
-  {
-    name: "AI Chat",
-    prompt: "You are JaraAi, a helpful AI assistant. Answer clearly and directly."
-  },
-  {
-    name: "Image Prompt",
-    prompt: "Create a detailed cinematic AI image-generation prompt. Include subject, environment, lighting, camera, composition and 16:9."
-  },
-  {
-    name: "Video Prompt",
-    prompt: "Create a detailed cinematic AI video prompt with camera movement, subject movement, environment, lighting and duration."
-  },
-  {
-    name: "Research",
-    prompt: "Act as a research assistant. Organize the topic into facts, dates, locations, people, evidence, investigation and unanswered questions. Never invent missing facts."
-  },
-  {
-    name: "Documentary",
-    prompt: "Create a serious, natural, cinematic documentary structure with a strong hook, chronological storytelling and audience retention."
-  }
-];
+let currentMode = "General";
 
-/* ---------- 4 HOUR FREE SESSION ---------- */
+const chat = document.getElementById("chat");
+const input = document.getElementById("prompt");
+const send = document.getElementById("send");
 
-const JARA_SESSION_TIME = 4 * 60 * 60 * 1000;
-const JARA_START_KEY = "jaraAiSessionStart";
+document.querySelectorAll(".mode").forEach(button => {
 
-function jaraStartSession() {
-  let start = localStorage.getItem(JARA_START_KEY);
+  button.addEventListener("click", () => {
 
-  if (!start) {
-    start = Date.now().toString();
-    localStorage.setItem(JARA_START_KEY, start);
-  }
+    document.querySelectorAll(".mode")
+      .forEach(b => b.classList.remove("active"));
 
-  return Number(start);
-}
+    button.classList.add("active");
 
-function jaraRemainingTime() {
-  const start = jaraStartSession();
-  return Math.max(0, JARA_SESSION_TIME - (Date.now() - start));
-}
+    currentMode = button.dataset.mode;
 
-function jaraFormatTime(ms) {
-  const total = Math.floor(ms / 1000);
-  const h = Math.floor(total / 3600);
-  const m = Math.floor((total % 3600) / 60);
-  const s = total % 60;
+    input.placeholder =
+      "JARA AI " + currentMode + " Mode — ask anything...";
 
-  return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
-}
-
-function jaraTimer() {
-  const remaining = jaraRemainingTime();
-
-  const timer = document.getElementById("jaraTimer");
-
-  if (timer) {
-    timer.textContent = "Free: " + jaraFormatTime(remaining);
-  }
-
-  if (remaining <= 0) {
-    const send = document.querySelector(".send");
-    if (send) send.disabled = true;
-
-    if (timer) timer.textContent = "Free session ended";
-  }
-}
-
-setInterval(jaraTimer, 1000);
-jaraTimer();
-
-
-/* ---------- TOOL BUTTONS ---------- */
-
-function jaraCreateTools() {
-
-  if (document.getElementById("jaraTools")) return;
-
-  const box = document.createElement("div");
-  box.id = "jaraTools";
-
-  box.style.cssText = `
-    display:flex;
-    flex-wrap:wrap;
-    gap:8px;
-    justify-content:center;
-    margin:12px 0 4px;
-  `;
-
-  JARA_TOOLS.forEach(tool => {
-
-    const button = document.createElement("button");
-
-    button.textContent = tool.name;
-
-    button.style.cssText = `
-      padding:9px 14px;
-      border-radius:999px;
-      background:rgba(124,92,255,.12);
-      border:1px solid rgba(124,92,255,.35);
-      color:white;
-      cursor:pointer;
-      font-size:13px;
-    `;
-
-    button.onclick = () => {
-
-      const textarea = document.querySelector("textarea");
-
-      if (!textarea) return;
-
-      if (tool.name === "AI Chat") {
-        textarea.value = "";
-        textarea.placeholder = "Ask JaraAi anything...";
-      } else {
-        textarea.value =
-          `[${tool.name}]\n\n` +
-          `Topic: \n\n` +
-          `Create the result using these instructions:\n` +
-          tool.prompt;
-      }
-
-      textarea.focus();
-    };
-
-    box.appendChild(button);
   });
 
-  const chat = document.querySelector(".chat");
+});
 
-  if (chat) {
-    chat.parentNode.insertBefore(box, chat);
+
+function addMessage(text,type){
+
+  const div = document.createElement("div");
+
+  div.className = "message " + type;
+
+  div.textContent = text;
+
+  chat.appendChild(div);
+
+  chat.scrollTop = chat.scrollHeight;
+
+}
+
+
+function usePrompt(text){
+
+  input.value = text;
+
+  input.focus();
+
+}
+
+
+function demoAnswer(question){
+
+  const q = question.toLowerCase();
+
+  if(q.includes("artificial intelligence") || q.includes("what is ai")){
+
+    return `Artificial Intelligence (AI) means technology that allows computers to perform tasks that normally require human intelligence.
+
+For example:
+• Understanding language
+• Answering questions
+• Recognizing images
+• Solving problems
+• Learning from information
+• Generating text or code
+
+JARA AI is designed to provide this kind of AI assistant experience.
+
+Current status: Demo Mode.`;
+
   }
+
+
+  if(currentMode === "Education"){
+
+    return `📚 Education Mode
+
+I can explain this topic step by step:
+
+1. Basic concept
+2. Important ideas
+3. Simple examples
+4. Real-world applications
+5. Short summary
+6. Practice questions
+
+Your topic:
+${question}
+
+Real AI connection can be added later.`;
+
+  }
+
+
+  if(currentMode === "Research"){
+
+    return `🔎 Research Mode
+
+I can organize research into:
+
+• Overview
+• Key facts
+• Important concepts
+• Different viewpoints
+• Examples
+• Summary
+• Sources
+
+Your research topic:
+${question}
+
+Current version is Demo Mode, so live web research is not active yet.`;
+
+  }
+
+
+  if(currentMode === "Coding"){
+
+    return `💻 Coding Mode
+
+I can help with:
+
+• HTML
+• CSS
+• JavaScript
+• Python
+• Websites
+• Debugging
+• Programming concepts
+• Code explanations
+
+Your coding request:
+${question}
+
+Real AI coding assistance can be connected later.`;
+
+  }
+
+
+  if(currentMode === "Writing"){
+
+    return `✍️ Writing Mode
+
+I can help create or improve:
+
+• Emails
+• Articles
+• Essays
+• Captions
+• Stories
+• Reports
+• Professional messages
+
+Your request:
+${question}
+
+Real AI writing generation can be connected later.`;
+
+  }
+
+
+  if(currentMode === "Analysis"){
+
+    return `🧠 Analysis Mode
+
+I can break a topic into:
+
+• Facts
+• Key points
+• Evidence
+• Assumptions
+• Advantages
+• Limitations
+• Conclusions
+
+Topic:
+${question}
+
+Current version is Demo Mode.`;
+
+  }
+
+
+  return `🤖 JARA AI
+
+I received your question:
+
+"${question}"
+
+Current Mode: ${currentMode}
+
+JARA AI is currently running in Demo Mode.
+
+The interface is ready for connection to a real AI backend.`;
+
 }
 
 
-/* ---------- TIMER DISPLAY ---------- */
+function sendMessage(){
 
-function jaraCreateTimer() {
+  const question = input.value.trim();
 
-  if (document.getElementById("jaraTimer")) return;
+  if(!question) return;
 
-  const header = document.querySelector("header");
+  addMessage(question,"user");
 
-  if (!header) return;
+  input.value = "";
 
-  const timer = document.createElement("div");
+  send.disabled = true;
 
-  timer.id = "jaraTimer";
+  const typing = document.createElement("div");
 
-  timer.style.cssText = `
-    font-size:12px;
-    color:#8effbd;
-    margin-top:4px;
-  `;
+  typing.className = "message ai";
 
-  header.appendChild(timer);
+  typing.textContent = "JARA AI is thinking...";
 
-  jaraTimer();
+  chat.appendChild(typing);
+
+  chat.scrollTop = chat.scrollHeight;
+
+
+  setTimeout(() => {
+
+    typing.remove();
+
+    addMessage(
+      demoAnswer(question),
+      "ai"
+    );
+
+    send.disabled = false;
+
+  },700);
+
 }
 
 
-/* ---------- START ---------- */
+send.addEventListener("click",sendMessage);
 
-document.addEventListener("DOMContentLoaded", () => {
-  jaraCreateTools();
-  jaraCreateTimer();
+
+input.addEventListener("keydown",function(event){
+
+  if(event.key === "Enter" && !event.shiftKey){
+
+    event.preventDefault();
+
+    sendMessage();
+
+  }
+
+});
+
+
+input.addEventListener("input",function(){
+
+  this.style.height = "auto";
+
+  this.style.height =
+    Math.min(this.scrollHeight,160) + "px";
+
 });
 
 </script>
+
+</body>
+</html>
