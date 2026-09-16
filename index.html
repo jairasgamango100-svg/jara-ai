@@ -1,15 +1,18 @@
+
+
+Index · HTML
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>JARA AI</title>
-
+ 
   <style>
     * {
       box-sizing: border-box;
     }
-
+ 
     body {
       margin: 0;
       min-height: 100vh;
@@ -20,7 +23,7 @@
         radial-gradient(circle at top right, #003c52, transparent 35%),
         #070a12;
     }
-
+ 
     .app {
       width: min(900px, 94%);
       margin: auto;
@@ -29,20 +32,20 @@
       flex-direction: column;
       padding: 20px 0;
     }
-
+ 
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 10px 0 20px;
     }
-
+ 
     .brand {
       display: flex;
       align-items: center;
       gap: 12px;
     }
-
+ 
     .logo {
       width: 45px;
       height: 45px;
@@ -53,22 +56,22 @@
       font-weight: bold;
       background: linear-gradient(135deg, #7c5cff, #00d9ff);
     }
-
+ 
     h1 {
       margin: 0;
       font-size: 21px;
     }
-
+ 
     .status {
       color: #8effbd;
       font-size: 13px;
     }
-
+ 
     .hero {
       text-align: center;
       padding: 45px 10px 30px;
     }
-
+ 
     .orb {
       width: 110px;
       height: 110px;
@@ -81,33 +84,33 @@
       background: linear-gradient(135deg, #7c5cff, #00d9ff);
       box-shadow: 0 0 50px rgba(124,92,255,.35);
     }
-
+ 
     .hero h2 {
       margin: 0;
       font-size: clamp(38px, 8vw, 68px);
     }
-
+ 
     .gradient {
       background: linear-gradient(90deg, #fff, #a797ff, #50e8ff);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
     }
-
+ 
     .hero p {
       max-width: 620px;
       margin: 16px auto;
       color: #9aa5bc;
       line-height: 1.6;
     }
-
+ 
     .chat {
       overflow: hidden;
       border: 1px solid rgba(255,255,255,.1);
       border-radius: 22px;
       background: rgba(15,20,35,.88);
     }
-
+ 
     .chat-top {
       padding: 14px 18px;
       border-bottom: 1px solid rgba(255,255,255,.1);
@@ -116,7 +119,7 @@
       color: #9aa5bc;
       font-size: 13px;
     }
-
+ 
     #messages {
       min-height: 320px;
       max-height: 55vh;
@@ -126,7 +129,7 @@
       flex-direction: column;
       gap: 13px;
     }
-
+ 
     .message {
       max-width: 82%;
       padding: 13px 15px;
@@ -134,24 +137,24 @@
       line-height: 1.6;
       white-space: pre-wrap;
     }
-
+ 
     .ai {
       align-self: flex-start;
       background: #182039;
     }
-
+ 
     .user {
       align-self: flex-end;
       background: #29365a;
     }
-
+ 
     .composer {
       display: flex;
       gap: 10px;
       padding: 12px;
       border-top: 1px solid rgba(255,255,255,.1);
     }
-
+ 
     textarea {
       flex: 1;
       min-height: 52px;
@@ -163,18 +166,25 @@
       outline: none;
       background: rgba(255,255,255,.05);
       color: white;
+      font-family: inherit;
+      font-size: 14px;
     }
-
+ 
     textarea:focus {
       border-color: #7c5cff;
     }
-
+ 
     button {
       border: 0;
       cursor: pointer;
       color: white;
     }
-
+ 
+    button:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+ 
     .send {
       height: 52px;
       padding: 0 19px;
@@ -182,7 +192,7 @@
       font-weight: bold;
       background: linear-gradient(135deg, #7c5cff, #5e8dff);
     }
-
+ 
     .quick {
       display: flex;
       flex-wrap: wrap;
@@ -190,14 +200,14 @@
       gap: 8px;
       padding: 16px 0;
     }
-
+ 
     .quick button {
       padding: 9px 13px;
       border-radius: 999px;
       border: 1px solid rgba(255,255,255,.1);
       background: rgba(255,255,255,.04);
     }
-
+ 
     footer {
       margin-top: auto;
       text-align: center;
@@ -205,7 +215,7 @@
       color: #69748a;
       font-size: 12px;
     }
-
+ 
     @media (max-width: 600px) {
       .message {
         max-width: 90%;
@@ -213,11 +223,11 @@
     }
   </style>
 </head>
-
+ 
 <body>
-
+ 
   <div class="app">
-
+ 
     <header>
       <div class="brand">
         <div class="logo">J</div>
@@ -228,217 +238,140 @@
           </div>
         </div>
       </div>
-
+ 
       <div class="status">● Live AI</div>
     </header>
-
+ 
     <section class="hero">
       <div class="orb">J</div>
-
+ 
       <h2>
         Meet <span class="gradient">JARA AI</span>
       </h2>
-
+ 
       <p>
-        Your futuristic AI assistant. Ask questions, create ideas,
-        learn new things, and chat with JARA AI.
+        Your futuristic AI assistant. Ask anything — questions, research,
+        stories, ideas — and JARA AI will answer.
       </p>
     </section>
-
+ 
     <section class="chat">
-
+ 
       <div class="chat-top">
         <span>JARA AI • Live AI</span>
         <span id="clock"></span>
       </div>
-
+ 
       <div id="messages">
-        <div class="message ai">
-          Hello! 👋 I'm JARA AI.
-
-          How can I help you today?
-        </div>
+        <div class="message ai">Hello! 👋 I'm JARA AI. How can I help you today?</div>
       </div>
-
+ 
       <div class="composer">
-
-        <textarea
-          id="input"
-          placeholder="Message JARA AI..."
-          rows="1">
-        </textarea>
-
-        <button class="send" id="sendBtn">
-          Send
-        </button>
-
+        <textarea id="input" placeholder="Message JARA AI..." rows="1"></textarea>
+        <button class="send" id="sendBtn">Send</button>
       </div>
-
+ 
     </section>
-
+ 
     <div class="quick">
-
-      <button data-prompt="Give me 10 documentary topics in table format.">
-        💡 Documentary Ideas
-      </button>
-
-      <button data-prompt="Give me 5 creative website ideas.">
-        🚀 Website Ideas
-      </button>
-
-      <button data-prompt="Explain artificial intelligence in simple words.">
-        🤖 Explain AI
-      </button>
-
-      <button data-prompt="Write a professional bio for a developer.">
-        📝 Write a Bio
-      </button>
-
+      <button data-prompt="Give me 10 documentary topics in table format.">💡 Documentary Ideas</button>
+      <button data-prompt="Give me 5 creative website ideas.">🚀 Website Ideas</button>
+      <button data-prompt="Explain artificial intelligence in simple words.">🤖 Explain AI</button>
+      <button data-prompt="Write a professional bio for a developer.">📝 Write a Bio</button>
     </div>
-
-    <footer>
-      © <span id="year"></span> JARA AI
-    </footer>
-
+ 
+    <footer>© <span id="year"></span> JARA AI</footer>
+ 
   </div>
-
+ 
   <script>
-
+    // ⚠️ Apna Worker URL yahan daalein (agar naya banaya hai to badal lein)
+    const WORKER_URL = "https://jara-ai-backend.jairasgamango100.workers.dev/";
+ 
     const input = document.getElementById("input");
     const sendBtn = document.getElementById("sendBtn");
     const messages = document.getElementById("messages");
-
+ 
     function addMessage(text, type) {
-
       const message = document.createElement("div");
-
       message.className = "message " + type;
-
       message.textContent = text;
-
       messages.appendChild(message);
-
       messages.scrollTop = messages.scrollHeight;
+      return message;
     }
-
+ 
     function showTyping() {
-
-      const typing = document.createElement("div");
-
-      typing.className = "message ai";
-
-      typing.textContent = "JARA AI is thinking...";
-
-      messages.appendChild(typing);
-
-      messages.scrollTop = messages.scrollHeight;
-
-      return typing;
+      return addMessage("JARA AI is thinking...", "ai");
     }
-
+ 
+    let busy = false;
+ 
     async function sendMessage(customText) {
-
+      if (busy) return;
+ 
       const text = (customText || input.value).trim();
-
       if (!text) return;
-
+ 
       addMessage(text, "user");
-
       input.value = "";
-
+ 
+      busy = true;
+      sendBtn.disabled = true;
+ 
       const typing = showTyping();
-
+ 
       try {
-
-        const response = await fetch(
-          "https://jara-ai-backend.jairasgamango100.workers.dev/",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              message: text
-            })
-          }
-        );
-
+        const response = await fetch(WORKER_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: text })
+        });
+ 
         const data = await response.json();
-
         typing.remove();
-
+ 
         if (!response.ok) {
-
           console.error(data);
-
-          addMessage(
-            "AI server error 😕 Please check Cloudflare Worker.",
-            "ai"
-          );
-
+          addMessage("AI server error 😕 " + (data.error?.error?.message || data.error || "Please check the Worker."), "ai");
           return;
         }
-
-        addMessage(
-          data.reply || "No response received from AI.",
-          "ai"
-        );
-
+ 
+        addMessage(data.reply || "No response received from AI.", "ai");
+ 
       } catch (error) {
-
         typing.remove();
-
         console.error(error);
-
-        addMessage(
-          "JARA AI server se connect nahi ho pa raha 😕",
-          "ai"
-        );
+        addMessage("JARA AI server se connect nahi ho pa raha 😕", "ai");
+      } finally {
+        busy = false;
+        sendBtn.disabled = false;
       }
     }
-
-    sendBtn.addEventListener("click", function() {
-      sendMessage();
-    });
-
-    input.addEventListener("keydown", function(event) {
-
+ 
+    sendBtn.addEventListener("click", () => sendMessage());
+ 
+    input.addEventListener("keydown", (event) => {
       if (event.key === "Enter" && !event.shiftKey) {
-
         event.preventDefault();
-
         sendMessage();
       }
-
     });
-
-    document.querySelectorAll(".quick button").forEach(function(button) {
-
-      button.addEventListener("click", function() {
-
-        sendMessage(button.dataset.prompt);
-
-      });
-
+ 
+    document.querySelectorAll(".quick button").forEach((button) => {
+      button.addEventListener("click", () => sendMessage(button.dataset.prompt));
     });
-
+ 
     function updateClock() {
-
       document.getElementById("clock").textContent =
-        new Date().toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit"
-        });
+        new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
     }
-
-    document.getElementById("year").textContent =
-      new Date().getFullYear();
-
+ 
+    document.getElementById("year").textContent = new Date().getFullYear();
     updateClock();
-
-    setInterval(updateClock, 30000);
-
+    setInterval(updateClock, 1000);
   </script>
-
+ 
 </body>
 </html>
+ 
