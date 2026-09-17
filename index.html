@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -163,6 +164,11 @@ textarea::placeholder{
   background:#917cff;
 }
 
+#send:disabled{
+  opacity:0.6;
+  cursor:not-allowed;
+}
+
 .quick{
   display:flex;
   gap:8px;
@@ -205,7 +211,7 @@ textarea::placeholder{
 
 <header>
   <div class="logo">JARA <span>AI</span></div>
-  <div class="status">● READY</div>
+  <div class="status">● ONLINE</div>
 </header>
 
 <section class="hero">
@@ -299,7 +305,7 @@ rows="1">
 </div>
 
 <div class="footer">
-JARA AI • Demo Mode
+JARA AI • Powered by JaraAi Backend
 </div>
 
 </div>
@@ -309,6 +315,9 @@ JARA AI • Demo Mode
 <script>
 
 let currentMode = "General";
+
+const API_URL =
+"https://jara-ai-backend.jairasgamango100.workers.dev";
 
 const chat = document.getElementById("chat");
 const input = document.getElementById("prompt");
@@ -357,155 +366,7 @@ function usePrompt(text){
 }
 
 
-function demoAnswer(question){
-
-  const q = question.toLowerCase();
-
-  if(q.includes("artificial intelligence") || q.includes("what is ai")){
-
-    return `Artificial Intelligence (AI) means technology that allows computers to perform tasks that normally require human intelligence.
-
-For example:
-• Understanding language
-• Answering questions
-• Recognizing images
-• Solving problems
-• Learning from information
-• Generating text or code
-
-JARA AI is designed to provide this kind of AI assistant experience.
-
-Current status: Demo Mode.`;
-
-  }
-
-
-  if(currentMode === "Education"){
-
-    return `📚 Education Mode
-
-I can explain this topic step by step:
-
-1. Basic concept
-2. Important ideas
-3. Simple examples
-4. Real-world applications
-5. Short summary
-6. Practice questions
-
-Your topic:
-${question}
-
-Real AI connection can be added later.`;
-
-  }
-
-
-  if(currentMode === "Research"){
-
-    return `🔎 Research Mode
-
-I can organize research into:
-
-• Overview
-• Key facts
-• Important concepts
-• Different viewpoints
-• Examples
-• Summary
-• Sources
-
-Your research topic:
-${question}
-
-Current version is Demo Mode, so live web research is not active yet.`;
-
-  }
-
-
-  if(currentMode === "Coding"){
-
-    return `💻 Coding Mode
-
-I can help with:
-
-• HTML
-• CSS
-• JavaScript
-• Python
-• Websites
-• Debugging
-• Programming concepts
-• Code explanations
-
-Your coding request:
-${question}
-
-Real AI coding assistance can be connected later.`;
-
-  }
-
-
-  if(currentMode === "Writing"){
-
-    return `✍️ Writing Mode
-
-I can help create or improve:
-
-• Emails
-• Articles
-• Essays
-• Captions
-• Stories
-• Reports
-• Professional messages
-
-Your request:
-${question}
-
-Real AI writing generation can be connected later.`;
-
-  }
-
-
-  if(currentMode === "Analysis"){
-
-    return `🧠 Analysis Mode
-
-I can break a topic into:
-
-• Facts
-• Key points
-• Evidence
-• Assumptions
-• Advantages
-• Limitations
-• Conclusions
-
-Topic:
-${question}
-
-Current version is Demo Mode.`;
-
-  }
-
-
-  return `🤖 JARA AI
-
-I received your question:
-
-"${question}"
-
-Current Mode: ${currentMode}
-
-JARA AI is currently running in Demo Mode.
-
-The interface is ready for connection to a real AI backend.`;
-
-}
-
-
-function sendMessage(){
+async function sendMessage(){
 
   const question = input.value.trim();
 
@@ -528,18 +389,68 @@ function sendMessage(){
   chat.scrollTop = chat.scrollHeight;
 
 
-  setTimeout(() => {
+  try{
+
+    const response = await fetch(API_URL, {
+
+      method:"POST",
+
+      headers:{
+        "Content-Type":"application/json"
+      },
+
+      body:JSON.stringify({
+
+        message:
+        `Current mode: ${currentMode}
+
+User question:
+${question}`
+
+      })
+
+    });
+
+
+    const data = await response.json();
+
+    typing.remove();
+
+
+    if(data.success && data.reply){
+
+      addMessage(
+        data.reply,
+        "ai"
+      );
+
+    }else{
+
+      addMessage(
+        "JARA AI could not get a response from the AI server.\n\nPlease try again.",
+        "ai"
+      );
+
+      console.error("API Error:",data);
+
+    }
+
+
+  }catch(error){
 
     typing.remove();
 
     addMessage(
-      demoAnswer(question),
+      "Connection error.\n\nJARA AI could not connect to the backend.",
       "ai"
     );
 
-    send.disabled = false;
+    console.error("Connection Error:",error);
 
-  },700);
+  }
+
+
+  send.disabled = false;
 
 }
 
@@ -573,3 +484,4 @@ input.addEventListener("input",function(){
 
 </body>
 </html>
+```
